@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Philiprehberger.ObjectDiff</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Philip Rehberger</Authors>
+    <Description>Compare two objects and return a list of property-level changes</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/philiprehberger/dotnet-object-diff</RepositoryUrl>
+    <PackageTags>diff;compare;objects;changes;audit;tracking</PackageTags>
+  </PropertyGroup>
+</Project>
