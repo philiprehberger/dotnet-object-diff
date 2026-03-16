@@ -78,6 +78,12 @@ string json = ObjectDiff.ToJson(result);
 | `DiffOptions.DeepCompare` | Enable recursive nested comparison (default: `false`) |
 | `DiffOptions.MaxDepth` | Max recursion depth for deep compare (default: `3`) |
 
+## Development
+
+```bash
+dotnet build src/Philiprehberger.ObjectDiff.csproj --configuration Release
+```
+
 ## License
 
 [MIT](LICENSE)
