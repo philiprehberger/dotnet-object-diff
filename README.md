@@ -1,5 +1,9 @@
 # Philiprehberger.ObjectDiff
 
+[![CI](https://github.com/philiprehberger/dotnet-object-diff/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/dotnet-object-diff/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Philiprehberger.ObjectDiff.svg)](https://www.nuget.org/packages/Philiprehberger.ObjectDiff)
+[![License](https://img.shields.io/github/license/philiprehberger/dotnet-object-diff)](LICENSE)
+
 Compare two objects and return a list of property-level changes. Zero external dependencies.
 
 ## Install
