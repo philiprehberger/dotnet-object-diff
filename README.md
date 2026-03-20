@@ -6,7 +6,7 @@
 
 Compare two objects and return a list of property-level changes. Zero external dependencies.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Philiprehberger.ObjectDiff
@@ -86,4 +86,4 @@ dotnet build src/Philiprehberger.ObjectDiff.csproj --configuration Release
 
 ## License
 
-[MIT](LICENSE)
+MIT
