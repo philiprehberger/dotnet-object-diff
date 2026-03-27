@@ -6,9 +6,9 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageId>Philiprehberger.ObjectDiff</PackageId>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <Authors>Philip Rehberger</Authors>
-    <Description>Compare two objects and return a list of property-level changes. Zero external dependencies.</Description>
+    <Description>Compare two objects and return a list of property-level changes.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/philiprehberger/dotnet-object-diff</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
