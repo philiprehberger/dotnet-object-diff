@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -79,10 +80,21 @@ public static class ObjectDiff
             if (options.IgnoreProperties.Contains(fullName) || options.IgnoreProperties.Contains(prop.Name))
                 continue;
 
+            if (prop.GetCustomAttribute<DiffIgnoreAttribute>() is not null)
+                continue;
+
             var oldValue = oldObj is not null ? prop.GetValue(oldObj) : null;
             var newValue = newObj is not null ? prop.GetValue(newObj) : null;
 
-            if (options.DeepCompare
+            if (IsDictionaryType(prop.PropertyType))
+            {
+                CompareDictionary(oldValue as IDictionary, newValue as IDictionary, fullName, changes);
+            }
+            else if (IsEnumerableType(prop.PropertyType))
+            {
+                CompareCollection(oldValue as IEnumerable, newValue as IEnumerable, fullName, changes);
+            }
+            else if (options.DeepCompare
                 && depth < options.MaxDepth
                 && IsComplexType(prop.PropertyType)
                 && (oldValue is not null || newValue is not null))
@@ -99,6 +111,100 @@ public static class ObjectDiff
         }
     }
 
+    /// <summary>
+    /// Compares two collections element by element, detecting additions, removals, and modifications at each index.
+    /// </summary>
+    private static void CompareCollection(
+        IEnumerable? oldCollection,
+        IEnumerable? newCollection,
+        string propertyName,
+        List<PropertyChange> changes)
+    {
+        var oldList = ToObjectList(oldCollection);
+        var newList = ToObjectList(newCollection);
+
+        var maxCount = Math.Max(oldList.Count, newList.Count);
+
+        for (var i = 0; i < maxCount; i++)
+        {
+            var oldValue = i < oldList.Count ? oldList[i] : null;
+            var newValue = i < newList.Count ? newList[i] : null;
+
+            if (!Equals(oldValue, newValue))
+            {
+                changes.Add(new PropertyChange($"{propertyName}[{i}]", oldValue, newValue));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Compares two dictionaries key by key, detecting additions, removals, and value changes.
+    /// </summary>
+    private static void CompareDictionary(
+        IDictionary? oldDict,
+        IDictionary? newDict,
+        string propertyName,
+        List<PropertyChange> changes)
+    {
+        var oldKeys = GetDictionaryKeys(oldDict);
+        var newKeys = GetDictionaryKeys(newDict);
+
+        var allKeys = new HashSet<object>(oldKeys);
+        foreach (var key in newKeys)
+            allKeys.Add(key);
+
+        foreach (var key in allKeys)
+        {
+            var keyName = $"{propertyName}[{key}]";
+            var oldValue = oldDict is not null && oldDict.Contains(key) ? oldDict[key] : null;
+            var newValue = newDict is not null && newDict.Contains(key) ? newDict[key] : null;
+
+            if (!Equals(oldValue, newValue))
+            {
+                changes.Add(new PropertyChange(keyName, oldValue, newValue));
+            }
+        }
+    }
+
+    private static List<object> GetDictionaryKeys(IDictionary? dict)
+    {
+        if (dict is null)
+            return new List<object>();
+
+        var keys = new List<object>();
+        foreach (var key in dict.Keys)
+            keys.Add(key);
+        return keys;
+    }
+
+    private static List<object?> ToObjectList(IEnumerable? enumerable)
+    {
+        if (enumerable is null)
+            return new List<object?>();
+
+        var list = new List<object?>();
+        foreach (var item in enumerable)
+            list.Add(item);
+        return list;
+    }
+
+    private static bool IsDictionaryType(Type type)
+    {
+        if (typeof(IDictionary).IsAssignableFrom(type))
+            return true;
+
+        return type.GetInterfaces().Any(i =>
+            i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>));
+    }
+
+    private static bool IsEnumerableType(Type type)
+    {
+        if (type == typeof(string))
+            return false;
+
+        return typeof(IEnumerable).IsAssignableFrom(type);
+    }
+
     private static bool IsComplexType(Type type)
     {
         return !type.IsPrimitive
@@ -108,7 +214,9 @@ public static class ObjectDiff
             && type != typeof(DateTime)
             && type != typeof(DateTimeOffset)
             && type != typeof(Guid)
-            && !IsNullablePrimitive(type);
+            && !IsNullablePrimitive(type)
+            && !IsDictionaryType(type)
+            && !IsEnumerableType(type);
     }
 
     private static bool IsNullablePrimitive(Type type)

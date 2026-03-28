@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 (2026-03-28)
+
+- Add collection/list diffing with index-level change detection for `IEnumerable` properties
+- Add `[DiffIgnore]` attribute for excluding properties from comparison
+- Add dictionary diffing with key-level change detection for `IDictionary` properties
+- Add `GetSummary()` method on `DiffResult` for human-readable change descriptions
+- Add missing GitHub issue templates, dependabot config, and PR template
+- Add missing README badges (GitHub release, Last updated, Bug Reports, Feature Requests)
+- Add Support section to README
+
 ## 0.1.8 (2026-03-26)
 
 - Add Sponsor badge to README
