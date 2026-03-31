@@ -6,7 +6,7 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageId>Philiprehberger.ObjectDiff</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Philip Rehberger</Authors>
     <Description>Compare two objects and return a list of property-level changes.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
